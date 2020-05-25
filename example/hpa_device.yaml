@@ -1,0 +1,35 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: lm-metrics
+  namespace: ""
+  annotations:
+    # device-group-name: ""
+    device-name: ""
+    # datasource-name: ""
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: "" 
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: External
+      external:
+        metric:
+          name: logicmonitor
+          selector:
+            matchLabels:
+              # For using IDs :)
+              # devicegroup: ""
+              # device: ""
+              # datasource: ""
+              datapoint: ""
+              # period to pull data for (mins) Default is 10
+              period: "10"
+              # aggregator=avg,max,min,sum
+              aggregator: avg
+        target:
+          value: ""
+          type: Value

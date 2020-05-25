@@ -1,0 +1,54 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.service.name }}
+    version: latest
+  name: {{ .Values.service.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  template:
+    metadata:
+      annotations:
+        deploy_timestamp: {{ now }}
+      labels:
+        app: {{ .Values.service.name }}
+      name: {{ .Values.service.name }}
+    spec:
+      serviceAccountName: {{ .Values.service.name }}
+      containers:
+        - name:  {{ .Values.service.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - /metric-adapter
+            - --v={{ .Values.verboseLevel }}
+            - --collection-interval={{ .Values.collectorInvterval }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          env:
+          - name: ACCESS_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.service.name }}
+                key: accessID
+          - name: ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.service.name }}
+                key: accessKey
+          - name: ACCOUNT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.service.name }}
+                key: account

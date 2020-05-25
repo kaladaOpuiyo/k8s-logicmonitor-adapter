@@ -1,0 +1,15 @@
+replicaCount: 1
+image:
+  repository: urbanradikal/k8s-logicmonitor-adapter
+  tag: 0.0.1
+  pullPolicy: Always
+service:
+  name: k8s-logicmonitor-adapter
+  type: ClusterIP
+resources:
+  limits:
+    cpu: 100m
+    memory: 100Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi

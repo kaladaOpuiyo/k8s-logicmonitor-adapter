@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A custom/external metrics api server for logicmonitor Metrics  
+name: k8s-logicmonitor-adapter 
+version: 1.0.0
