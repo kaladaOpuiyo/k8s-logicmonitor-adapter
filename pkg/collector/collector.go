@@ -81,7 +81,11 @@ func Parse(hpa *autoscalingv2.HorizontalPodAutoscaler) ([]*MetricConfig, error) 
 			Type: metric.Type,
 		}
 
-		typeName.Metric = metric.External.Metric
+		switch metric.Type {
+		case autoscalingv2.ExternalMetricSourceType:
+			typeName.Metric = metric.External.Metric
+		default:
+		}
 
 		config := &MetricConfig{
 			MetricTypeName: typeName,
